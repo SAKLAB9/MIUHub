@@ -1,0 +1,23 @@
+{
+  "name": "miuhub",
+  "version": "1.0.0",
+  "description": "MIUHub - Legal pages for THE동문회",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "legal",
+    "privacy-policy",
+    "terms-of-service"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
