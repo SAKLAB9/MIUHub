@@ -73,6 +73,15 @@ app.get('/reset-password', (req, res) => {
 // 비밀번호 재설정 API (Supabase Admin API 사용)
 app.post('/api/auth/reset-password', async (req, res) => {
     try {
+        // 요청 로깅
+        console.log('=== 비밀번호 재설정 API 호출 ===');
+        console.log('요청 시간:', new Date().toISOString());
+        console.log('환경 변수 상태:');
+        console.log('  - SUPABASE_URL:', SUPABASE_URL || '미설정');
+        console.log('  - SUPABASE_SERVICE_KEY:', SUPABASE_SERVICE_KEY ? `설정됨 (길이: ${SUPABASE_SERVICE_KEY.length}, 시작: ${SUPABASE_SERVICE_KEY.substring(0, 20)}...)` : '미설정');
+        console.log('  - supabaseAdmin:', supabaseAdmin ? '초기화됨' : '초기화 안됨');
+        console.log('  - process.env.SUPABASE_SERVICE_KEY:', process.env.SUPABASE_SERVICE_KEY ? `존재 (길이: ${process.env.SUPABASE_SERVICE_KEY.length})` : '없음');
+        
         const { email, newPassword } = req.body;
         
         if (!email || !newPassword) {
