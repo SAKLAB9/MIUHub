@@ -17,14 +17,27 @@ app.use(express.static(__dirname));
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qgtwkhkmdsaypnsnrpbf.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY; // Service Role Key 필요
 
+// 환경 변수 디버깅 (Railway에서 확인용)
+console.log('=== Supabase 환경 변수 확인 ===');
+console.log('SUPABASE_URL:', SUPABASE_URL ? '설정됨' : '미설정');
+console.log('SUPABASE_SERVICE_KEY:', SUPABASE_SERVICE_KEY ? `설정됨 (길이: ${SUPABASE_SERVICE_KEY.length})` : '미설정');
+console.log('===========================');
+
 let supabaseAdmin = null;
 if (SUPABASE_SERVICE_KEY) {
-    supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
-        auth: {
-            autoRefreshToken: false,
-            persistSession: false
-        }
-    });
+    try {
+        supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false
+            }
+        });
+        console.log('✅ Supabase Admin 클라이언트 초기화 성공');
+    } catch (error) {
+        console.error('❌ Supabase Admin 클라이언트 초기화 실패:', error);
+    }
+} else {
+    console.error('❌ SUPABASE_SERVICE_KEY가 설정되지 않았습니다.');
 }
 
 // privacy-policy.html
@@ -88,10 +101,14 @@ app.post('/api/auth/reset-password', async (req, res) => {
         }
         
         if (!supabaseAdmin) {
-            console.error('Supabase Admin 클라이언트가 초기화되지 않았습니다.');
+            console.error('❌ Supabase Admin 클라이언트가 초기화되지 않았습니다.');
             console.error('SUPABASE_URL:', SUPABASE_URL);
             console.error('SUPABASE_SERVICE_KEY 존재 여부:', !!SUPABASE_SERVICE_KEY);
-            return res.status(500).json({ error: 'Supabase가 설정되지 않았습니다. SUPABASE_SERVICE_KEY 환경 변수를 확인해주세요.' });
+            console.error('현재 환경 변수:', {
+                SUPABASE_URL: SUPABASE_URL ? '설정됨' : '미설정',
+                SUPABASE_SERVICE_KEY: SUPABASE_SERVICE_KEY ? '설정됨' : '미설정'
+            });
+            return res.status(500).json({ error: 'Supabase가 설정되지 않았습니다. Railway Variables에서 SUPABASE_SERVICE_KEY 환경 변수를 확인해주세요.' });
         }
         
         // 이메일로 사용자 찾기
