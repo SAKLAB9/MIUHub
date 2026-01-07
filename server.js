@@ -88,6 +88,9 @@ app.post('/api/auth/reset-password', async (req, res) => {
         }
         
         if (!supabaseAdmin) {
+            console.error('Supabase Admin 클라이언트가 초기화되지 않았습니다.');
+            console.error('SUPABASE_URL:', SUPABASE_URL);
+            console.error('SUPABASE_SERVICE_KEY 존재 여부:', !!SUPABASE_SERVICE_KEY);
             return res.status(500).json({ error: 'Supabase가 설정되지 않았습니다. SUPABASE_SERVICE_KEY 환경 변수를 확인해주세요.' });
         }
         
